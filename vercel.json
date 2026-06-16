@@ -1,0 +1,13 @@
+{
+  "buildCommand": "npm run vercel-build",
+  "framework": "nextjs",
+  "regions": ["hkg1"],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "galaxybz.com" }],
+      "destination": "https://www.galaxybz.com/:path*",
+      "permanent": true
+    }
+  ]
+}

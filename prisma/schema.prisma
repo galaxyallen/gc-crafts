@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  category    String
+  name        String
+  slug        String   @unique
+  description String
+  materials   String
+  moq         String
+  features    String
+  images      String
+  sortOrder   Int      @default(0)
+  published   Boolean  @default(false)
+  seoTitle    String?
+  seoDesc     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model PageContent {
+  id       Int     @id @default(autoincrement())
+  section  String  @unique
+  title    String?
+  subtitle String?
+  body     String?
+  image    String?
+  metadata String?
+}
+
+model Inquiry {
+  id        Int      @id @default(autoincrement())
+  company   String
+  name      String
+  email     String
+  whatsapp  String?
+  role      String?
+  interests String
+  quantity  String?
+  timeline  String?
+  message   String?
+  status    String   @default("NEW")
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Material {
+  id        Int    @id @default(autoincrement())
+  name      String
+  subtitle  String
+  image     String
+  sortOrder Int    @default(0)
+}
+
+model FactoryStat {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String
+  label String
+}
+
+model Setting {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String
+}

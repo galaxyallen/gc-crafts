@@ -1,0 +1,21 @@
+{
+  "name": "GC CRAFTS — Bespoke Jewelry Display",
+  "short_name": "GC CRAFTS",
+  "description": "Premium jewelry display systems — designed, manufactured, and delivered worldwide.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#141210",
+  "theme_color": "#c4a265",
+  "icons": [
+    {
+      "src": "/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
