@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
 import type { ProductCategory } from "@/lib/types";
 import { prisma } from "@/lib/prisma";
-import { authOptions } from "@/lib/auth";
-import { requireAuth } from "@/lib/api-auth";
+import { requireAuth, hasAuthSession } from "@/lib/api-auth";
 import { assertHttpImageUrl, handleRouteError } from "@/lib/api-errors";
 import { sanitizeString } from "@/lib/utils";
 
@@ -17,12 +15,12 @@ function validateProductImages(images: unknown) {
 export async function GET(request: NextRequest) {
   try {
     const category = request.nextUrl.searchParams.get("category") as ProductCategory | null;
-    const session = await getServerSession(authOptions);
+    const authed = await hasAuthSession(request);
 
     const products = await prisma.product.findMany({
       where: {
         ...(category ? { category } : {}),
-        ...(session ? {} : { published: true }),
+        ...(authed ? {} : { published: true }),
       },
       orderBy: { sortOrder: "asc" },
     });
@@ -34,7 +32,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const { error } = await requireAuth();
+  const { error } = await requireAuth(request);
   if (error) return error;
 
   try {

@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/api-auth";
 import { parseJson } from "@/lib/utils";
 
-export async function GET() {
-  const { error } = await requireAuth();
+export async function GET(request: NextRequest) {
+  const { error } = await requireAuth(request);
   if (error) return error;
 
   const inquiries = await prisma.inquiry.findMany({

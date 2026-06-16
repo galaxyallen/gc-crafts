@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { adminFetch } from "@/lib/admin-fetch";
+import { readApiError } from "@/lib/client-api";
 
 type SettingsMap = Record<string, string>;
 
@@ -26,7 +28,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     async function load() {
-      const res = await fetch("/api/settings");
+      const res = await adminFetch("/api/settings");
       if (res.ok) setSettings(await res.json());
       setLoading(false);
     }
@@ -44,9 +46,8 @@ export default function SettingsPage() {
 
     const subset = Object.fromEntries(keys.map((k) => [k, settings[k] ?? ""]));
 
-    const res = await fetch("/api/settings", {
+    const res = await adminFetch("/api/settings", {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ settings: subset }),
     });
 
@@ -54,8 +55,7 @@ export default function SettingsPage() {
     if (res.ok) {
       setMessage("Settings saved");
     } else {
-      const data = await res.json().catch(() => ({}));
-      setError(data.error ?? "Failed to save");
+      setError(await readApiError(res, "Failed to save"));
     }
   }
 
@@ -64,9 +64,8 @@ export default function SettingsPage() {
     setMessage(null);
     setError(null);
 
-    const res = await fetch("/api/settings", {
+    const res = await adminFetch("/api/settings", {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         passwordChange: { currentPassword, newPassword, confirmPassword },
       }),
@@ -80,8 +79,7 @@ export default function SettingsPage() {
       setNewPassword("");
       setConfirmPassword("");
     } else {
-      const data = await res.json().catch(() => ({}));
-      setError(data.error ?? "Failed to update password");
+      setError(await readApiError(res, "Failed to update password"));
     }
   }
 
