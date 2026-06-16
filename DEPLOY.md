@@ -15,11 +15,13 @@ GC CRAFTS 使用 Next.js + Prisma + PostgreSQL + **Vercel Blob**。全部可在 
 1. 项目 → **Storage** → **Create Database** → **Postgres**
 2. 创建后点 **Connect to Project**
 3. 在 **Environment Variables** 确认有 `POSTGRES_URL`
-4. 手动添加（若未自动映射）：
+4. 若构建报错 `Environment variable not found: DATABASE_URL`，在 **Settings → Environment Variables** 手动添加：
 
-```
-DATABASE_URL = （与 POSTGRES_URL 相同，或 Storage 里的 Direct / Non-pooling 连接串）
-```
+| Name | Value |
+|------|--------|
+| `DATABASE_URL` | 复制 Storage 里 Neon 的 `POSTGRES_URL` 或 **Non-pooling** 连接串 |
+
+（勾选 Production，保存后 Redeploy）
 
 ### Vercel Blob 图片存储
 

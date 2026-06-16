@@ -2,6 +2,16 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
+import { ensureAuthEnv, getNextAuthSecret } from "./auth-env";
+
+ensureAuthEnv();
+
+const secret = getNextAuthSecret();
+if (!secret && process.env.NODE_ENV === "production") {
+  console.error(
+    "[auth] NEXTAUTH_SECRET is missing. Add it in Vercel → Settings → Environment Variables, then Redeploy."
+  );
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -43,5 +53,5 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret,
 };
