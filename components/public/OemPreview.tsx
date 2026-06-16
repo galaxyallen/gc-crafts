@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { CmsTitle } from "@/lib/cms-title";
 
 const ICONS: Record<string, ReactNode> = {
   Paintbrush: (
@@ -49,8 +50,11 @@ interface OemPreviewProps {
 }
 
 function parseStatValue(value: string) {
-  const match = value.match(/^(\d+)(.*)$/);
-  if (match) return { num: match[1], suffix: match[2] };
+  const digits = value.replace(/,/g, "").match(/^(\d+)/);
+  if (digits) {
+    const suffix = value.slice(digits[0].length);
+    return { num: digits[1], suffix };
+  }
   return { num: value, suffix: "" };
 }
 
@@ -63,9 +67,13 @@ export function OemPreview({ title, body, cards, stats }: OemPreviewProps) {
           <div>
             <div className="slb rv">OEM & Factory</div>
             <h2 className="stt rv">
-              Your brand,
-              <br />
-              <em>our production line</em>
+              {title ? <CmsTitle text={title} /> : (
+                <>
+                  Your brand,
+                  <br />
+                  <em>our production line</em>
+                </>
+              )}
             </h2>
           </div>
           <p className="rv d2">

@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { slugify, parseJson } from "@/lib/utils";
+import { readApiError } from "@/lib/client-api";
 
 const CATEGORIES: { value: ProductCategory; label: string }[] = [
   { value: "DISPLAYS", label: "Displays" },
@@ -95,8 +96,7 @@ export function ProductForm({ product }: ProductFormProps) {
       });
 
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error ?? "Failed to save product");
+        throw new Error(await readApiError(res, "Failed to save product"));
       }
 
       router.push("/admin/products");

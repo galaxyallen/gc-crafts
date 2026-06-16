@@ -26,8 +26,20 @@ GC CRAFTS 使用 Next.js + Prisma + PostgreSQL + **Vercel Blob**。全部可在 
 ### Vercel Blob 图片存储
 
 1. 项目 → **Storage** → **Create Database** → **Blob**
-2. 创建后点 **Connect to Project**
-3. 会自动注入 `BLOB_READ_WRITE_TOKEN`（无需手动复制）
+2. **Access 选 Public**（网站图片需要公开 URL；Private 需额外代理，见下）
+3. 创建后打开该 Blob → **Projects** → **Connect to Project** → 选 **gc-crafts**
+4. 会自动注入 `BLOB_READ_WRITE_TOKEN` 和/或 `BLOB_STORE_ID`
+5. **Deployments → Redeploy**（必须，否则环境变量不生效）
+
+若 Blob 已是 **Private**（例如 `gccrafts`）：
+
+| 变量 | 值 |
+|------|-----|
+| `BLOB_ACCESS` | `private` |
+
+并确认已 Connect 到 gc-crafts。图片会通过 `/api/media` 代理显示。
+
+**仍报 “Blob is not configured”**：到 Blob 页 **Quickstart → .env.local** 复制 `BLOB_READ_WRITE_TOKEN`，手动加到 gc-crafts 项目环境变量后 Redeploy。
 
 ## 三、环境变量
 
@@ -35,6 +47,8 @@ GC CRAFTS 使用 Next.js + Prisma + PostgreSQL + **Vercel Blob**。全部可在 
 |------|------|
 | `DATABASE_URL` | PostgreSQL 连接串 |
 | `BLOB_READ_WRITE_TOKEN` | 连接 Blob 后自动注入 |
+| `BLOB_STORE_ID` | 新版 OIDC 连接时自动注入 |
+| `BLOB_ACCESS` | `public`（默认）或 `private`（Private 存储必填） |
 | `NEXTAUTH_SECRET` | 随机字符串 |
 | `NEXTAUTH_URL` | `https://www.galaxybz.com` |
 | `ADMIN_EMAIL` | 后台管理员邮箱 |

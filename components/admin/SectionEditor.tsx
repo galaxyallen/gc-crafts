@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ImageField } from "@/components/admin/ImageField";
 import { GalleryEditor } from "@/components/admin/GalleryEditor";
 import { parseJson, cn } from "@/lib/utils";
+import { readApiError } from "@/lib/client-api";
 
 interface SectionEditorProps {
   sections: PageContent[];
@@ -37,7 +38,7 @@ const SECTION_HINTS: Record<string, string> = {
   capability_deliver: "Shown in the Deliver card on homepage",
   oem_intro: "Optional background image for the OEM page hero",
   factory_gallery: "Factory workshop photos on the OEM page",
-  page_contact: "Optional background image for the Contact page hero",
+  page_contact: "Contact page hero — title, tagline, description, and background image",
 };
 
 function SectionCard({
@@ -71,7 +72,7 @@ function SectionCard({
         body: JSON.stringify({ title, subtitle, body, image, metadata }),
       });
 
-      if (!res.ok) throw new Error("Failed to save section");
+      if (!res.ok) throw new Error(await readApiError(res, "Failed to save section"));
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (e) {
@@ -128,10 +129,28 @@ function SectionCard({
             </>
           )}
 
+          {section.section === "page_contact" && (
+            <>
+              <div className="space-y-2">
+                <Label>Title</Label>
+                <Input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Let's create something, extraordinary"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Subtitle / tagline</Label>
+                <Input value={subtitle} onChange={(e) => setSubtitle(e.target.value)} placeholder="Get in touch" />
+              </div>
+            </>
+          )}
+
           {(section.section === "hero" ||
             section.section === "brand_quote" ||
             section.section.startsWith("capability_") ||
-            section.section === "oem_intro") && (
+            section.section === "oem_intro" ||
+            section.section === "page_contact") && (
             <div className="space-y-2">
               <Label>Body</Label>
               <Textarea value={body} onChange={(e) => setBody(e.target.value)} rows={4} />

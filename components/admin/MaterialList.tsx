@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ImageField } from "@/components/admin/ImageField";
+import { readApiError } from "@/lib/client-api";
 
 interface MaterialListProps {
   initialMaterials: Material[];
@@ -165,7 +166,7 @@ export function MaterialList({ initialMaterials }: MaterialListProps) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
-        if (!res.ok) throw new Error("Failed to update material");
+        if (!res.ok) throw new Error(await readApiError(res, "Failed to update material"));
         const updated = await res.json();
         setMaterials((prev) => prev.map((m) => (m.id === editingId ? updated : m)));
       } else {
@@ -174,7 +175,7 @@ export function MaterialList({ initialMaterials }: MaterialListProps) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
-        if (!res.ok) throw new Error("Failed to create material");
+        if (!res.ok) throw new Error(await readApiError(res, "Failed to create material"));
         const created = await res.json();
         setMaterials((prev) => [...prev, created]);
       }

@@ -5,6 +5,8 @@ interface InfoGridProps {
   title?: React.ReactNode;
   description?: string;
   features: string[];
+  materials?: string;
+  moq?: string;
   image: string;
   imageAlt?: string;
 }
@@ -17,6 +19,8 @@ export function InfoGrid({
   ),
   description = "Every piece is designed in-house and manufactured in our own facility. We control every variable — from material grain direction to stitching tension — ensuring consistency across thousands of units.",
   features,
+  materials,
+  moq,
   image,
   imageAlt = "Product detail",
 }: InfoGridProps) {
@@ -27,6 +31,20 @@ export function InfoGrid({
           <div className="info-text rv">
             <h3>{title}</h3>
             <p>{description}</p>
+            {(materials || moq) && (
+              <div className="mb-4 space-y-1 text-sm text-t2">
+                {materials && (
+                  <p>
+                    <strong className="text-t1">Materials:</strong> {materials}
+                  </p>
+                )}
+                {moq && (
+                  <p>
+                    <strong className="text-t1">MOQ:</strong> {moq}
+                  </p>
+                )}
+              </div>
+            )}
             <ul className="feat-list">
               {features.map((feature) => (
                 <li key={feature}>{feature}</li>

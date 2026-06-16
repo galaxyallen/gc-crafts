@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
-import { ProductPageTemplate } from "@/components/public/ProductPageTemplate";
-
-export const revalidate = 3600;
-
-export const metadata: Metadata = {
-  title: "Jewelry Displays",
-  description: "Premium jewelry counter display sets for retail jewelers.",
-};
-
-export default function DisplaysPage() {
-  return <ProductPageTemplate category="DISPLAYS" tagline="Counter display sets" />;
-}
+import { ProductPageTemplate } from "@/components/public/ProductPageTemplate";
+import { getProductMetadata } from "@/lib/product-page-data";
+
+export const revalidate = 3600;
+
+export async function generateMetadata() {
+  return getProductMetadata("DISPLAYS");
+}
+
+export default function DisplaysPage() {
+  return <ProductPageTemplate category="DISPLAYS" tagline="Counter display sets" />;
+}

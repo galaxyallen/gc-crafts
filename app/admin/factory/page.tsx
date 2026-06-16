@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GalleryEditor, type GalleryImage } from "@/components/admin/GalleryEditor";
 import { parseJson } from "@/lib/utils";
+import { readApiError } from "@/lib/client-api";
 
 export default function FactoryPage() {
   const [stats, setStats] = useState<FactoryStat[]>([]);
@@ -22,6 +23,7 @@ export default function FactoryPage() {
   const [savingCapabilities, setSavingCapabilities] = useState(false);
   const [savingSteps, setSavingSteps] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -61,25 +63,35 @@ export default function FactoryPage() {
   async function saveStats() {
     setSavingStats(true);
     setMessage(null);
+    setError(null);
     const res = await fetch("/api/factory-stats", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(stats),
     });
     setSavingStats(false);
-    setMessage(res.ok ? "Stats saved" : "Failed to save stats");
+    if (res.ok) {
+      setMessage("Stats saved");
+    } else {
+      setError(await readApiError(res, "Failed to save stats"));
+    }
   }
 
   async function saveSection(section: string, metadata: Record<string, unknown>, setter: (v: boolean) => void) {
     setter(true);
     setMessage(null);
+    setError(null);
     const res = await fetch(`/api/content/${section}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ metadata }),
     });
     setter(false);
-    setMessage(res.ok ? "Saved" : "Save failed");
+    if (res.ok) {
+      setMessage("Saved");
+    } else {
+      setError(await readApiError(res, "Save failed"));
+    }
   }
 
   if (loading) {
@@ -98,6 +110,7 @@ export default function FactoryPage() {
       <Topbar title="Factory" />
       <div className="flex-1 space-y-6 p-6">
         {message && <p className="text-sm text-green-400">{message}</p>}
+        {error && <p className="text-sm text-red-400">{error}</p>}
 
         <Card className="bg-char-dd">
           <CardHeader>

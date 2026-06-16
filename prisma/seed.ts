@@ -86,6 +86,9 @@ const pageContents = [
   },
   {
     section: "page_contact",
+    title: "Let's create something, extraordinary",
+    subtitle: "Get in touch",
+    body: "Whether you're looking for standard products or a fully custom OEM solution, we'd love to hear from you.",
     image: "/img/hero-main.jpg",
   },
 ];
