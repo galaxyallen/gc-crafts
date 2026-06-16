@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import {
   LayoutDashboard,
   Package,
@@ -12,6 +13,7 @@ import {
   Factory,
   Settings,
   ExternalLink,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/shared/Logo";
@@ -92,7 +94,7 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="border-t border-gold/5 p-3">
+      <div className="space-y-0.5 border-t border-gold/5 p-3">
         <Link
           href="/"
           target="_blank"
@@ -101,6 +103,14 @@ export function Sidebar() {
           <ExternalLink className="h-4 w-4" />
           View live site
         </Link>
+        <button
+          type="button"
+          onClick={() => signOut({ callbackUrl: "/login" })}
+          className="flex w-full items-center gap-2 rounded-sm px-3 py-2.5 text-sm text-t2 transition-colors hover:bg-char-d hover:text-red-400"
+        >
+          <LogOut className="h-4 w-4" />
+          Sign out
+        </button>
       </div>
     </aside>
   );
