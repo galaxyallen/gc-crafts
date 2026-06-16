@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/api-auth";
 import { uploadToBlob } from "@/lib/blob-upload";
+import { isBlobConfigured } from "@/lib/blob-env";
 import { saveLocalUpload } from "@/lib/local-upload";
+
+const BLOB_SETUP_HINT =
+  "Vercel Blob is not configured. In Vercel: Storage → your Blob store → Projects → Connect to gc-crafts → Redeploy.";
 
 export async function POST(request: NextRequest) {
   const { error } = await requireAuth();
@@ -18,24 +22,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Only image files are allowed" }, { status: 400 });
   }
 
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
+  if (process.env.VERCEL || isBlobConfigured()) {
     try {
       const result = await uploadToBlob(file);
       return NextResponse.json(result);
     } catch (err) {
       console.error("Blob upload failed:", err);
-      return NextResponse.json({ error: "Failed to upload to Vercel Blob" }, { status: 500 });
+      const message = err instanceof Error ? err.message : String(err);
+      if (/token|not configured|BLOB_/i.test(message)) {
+        return NextResponse.json({ error: BLOB_SETUP_HINT }, { status: 503 });
+      }
+      return NextResponse.json({ error: `Upload failed: ${message}` }, { status: 500 });
     }
-  }
-
-  if (process.env.VERCEL) {
-    return NextResponse.json(
-      {
-        error:
-          "Vercel Blob is not configured. Create a Blob store in Vercel Storage and connect it to this project.",
-      },
-      { status: 503 }
-    );
   }
 
   const url = await saveLocalUpload(file);
