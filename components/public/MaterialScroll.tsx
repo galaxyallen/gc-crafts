@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { isDataUrl } from "@/lib/image-utils";
+import { isUnoptimizedImage } from "@/lib/image-utils";
 
 interface Material {
   id: number;
@@ -40,7 +40,7 @@ export function MaterialScroll({ materials }: MaterialScrollProps) {
                   height={120}
                   className="mi-color"
                   loading="lazy"
-                  unoptimized={isDataUrl(mat.image)}
+                  unoptimized={isUnoptimizedImage(mat.image)}
                 />
               </div>
               <div className="mi-name">{mat.name}</div>

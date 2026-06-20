@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { isDataUrl } from "@/lib/image-utils";
+import { isUnoptimizedImage } from "@/lib/image-utils";
 import { Plus, Trash2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -54,7 +54,7 @@ export function GalleryEditor({ label = "Gallery images", images, onChange }: Ga
                 alt={img.alt || `Gallery ${i + 1}`}
                 fill
                 className="object-cover"
-                unoptimized={isDataUrl(img.url)}
+                unoptimized={isUnoptimizedImage(img.url)}
               />
             </div>
           )}

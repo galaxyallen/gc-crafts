@@ -13,6 +13,37 @@ const pageContents = [
     image: "/img/hero-main.jpg",
   },
   {
+    section: "collection_cards",
+    metadata: JSON.stringify({
+      cards: [
+        {
+          category: "DISPLAYS",
+          name: "Jewelry Displays",
+          sub: "Complete counter sets — rings, earrings, bracelets, pendants",
+          image: "/img/displays.webp",
+        },
+        {
+          category: "TRAYS",
+          name: "Jewelry Trays",
+          sub: "Stackable trays, inserts, and modular platforms",
+          image: "/img/trays.webp",
+        },
+        {
+          category: "BUSTS",
+          name: "Necklace Busts",
+          sub: "Half and full busts in every material and finish",
+          image: "/img/busts.jpg",
+        },
+        {
+          category: "WATCHES",
+          name: "Watch Displays",
+          sub: "Cushions, stands, and winder-ready presentations",
+          image: "/img/watches.jpg",
+        },
+      ],
+    }),
+  },
+  {
     section: "brand_quote",
     body: "A display should never compete with its jewel. It should be felt, not seen — a presence that says this belongs here.",
   },
@@ -118,6 +149,7 @@ const settings = [
   { key: "whatsapp", value: "+852 xxxx xxxx" },
   { key: "instagram", value: "https://instagram.com/gccrafts" },
   { key: "linkedin", value: "https://linkedin.com/company/gccrafts" },
+  { key: "facebook", value: "https://facebook.com/gccrafts" },
   { key: "address_1", value: "Guangzhou, Guangdong, China" },
   { key: "address_2", value: "Hong Kong SAR, China" },
   { key: "notification_email", value: "hello@gccrafts.com" },

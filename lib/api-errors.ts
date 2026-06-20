@@ -28,6 +28,9 @@ export function assertHttpImageUrl(value: string, field = "Image") {
   if (value.startsWith("data:")) {
     throw new Error(`${field} must be uploaded — base64 images are too large to save. Use the upload button.`);
   }
+  if (value.startsWith("/api/media") || value.startsWith("/uploads/")) {
+    return;
+  }
   if (value.length > 4096) {
     throw new Error(`${field} URL is too long. Re-upload the image.`);
   }

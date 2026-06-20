@@ -12,6 +12,8 @@ import { ImageField } from "@/components/admin/ImageField";
 import { GalleryEditor } from "@/components/admin/GalleryEditor";
 import { parseJson, cn } from "@/lib/utils";
 import { readApiError } from "@/lib/client-api";
+import { DEFAULT_COLLECTION_CARDS, type CollectionCardData } from "@/lib/content";
+import { CATEGORY_LABELS, PRODUCT_CATEGORIES } from "@/lib/types";
 
 interface SectionEditorProps {
   sections: PageContent[];
@@ -19,6 +21,7 @@ interface SectionEditorProps {
 
 const SECTION_LABELS: Record<string, string> = {
   hero: "Home — Hero",
+  collection_cards: "Home — The Collection (4 category cards)",
   brand_quote: "Home — Brand Quote",
   trust_stats: "Home — Trust Stats",
   oem_intro: "OEM Page — Hero",
@@ -33,6 +36,7 @@ const SECTION_LABELS: Record<string, string> = {
 
 const SECTION_HINTS: Record<string, string> = {
   hero: "Homepage full-screen hero background",
+  collection_cards: "Four pillar cards on the homepage — image, title, and subtitle per category",
   capability_design: "Shown in the Design card on homepage",
   capability_manufacture: "Shown in the Manufacture card on homepage",
   capability_deliver: "Shown in the Deliver card on homepage",
@@ -161,6 +165,13 @@ function SectionCard({
             <ImageField label="Image" hint={hint} value={image} onChange={setImage} />
           )}
 
+          {section.section === "collection_cards" && (
+            <CollectionCardsEditor
+              cards={(metadata.cards as CollectionCardData[]) ?? DEFAULT_COLLECTION_CARDS}
+              onChange={(cards) => updateMetadata("cards", cards)}
+            />
+          )}
+
           {section.section === "trust_stats" && (
             <StatsEditor
               stats={(metadata.stats as { value: string; label: string }[]) ?? []}
@@ -201,6 +212,59 @@ function SectionCard({
         </CardContent>
       )}
     </Card>
+  );
+}
+
+function CollectionCardsEditor({
+  cards,
+  onChange,
+}: {
+  cards: CollectionCardData[];
+  onChange: (cards: CollectionCardData[]) => void;
+}) {
+  const ordered = PRODUCT_CATEGORIES.map((category) => {
+    const existing = cards.find((c) => c.category === category);
+    const defaults = DEFAULT_COLLECTION_CARDS.find((c) => c.category === category)!;
+    return existing ?? defaults;
+  });
+
+  function updateCard(index: number, patch: Partial<CollectionCardData>) {
+    const next = [...ordered];
+    next[index] = { ...next[index], ...patch };
+    onChange(next);
+  }
+
+  return (
+    <div className="space-y-4">
+      <p className="text-xs text-t3">
+        These four cards appear in the &quot;The Collection&quot; section on the homepage.
+      </p>
+      {ordered.map((card, i) => (
+        <div key={card.category} className={cn("space-y-3 rounded-sm border border-gold/5 p-4")}>
+          <p className="text-sm font-medium text-gold">
+            {String(i + 1).padStart(2, "0")} — {CATEGORY_LABELS[card.category]}
+          </p>
+          <ImageField
+            label="Card image"
+            hint="Shown on the homepage category card"
+            value={card.image}
+            onChange={(url) => updateCard(i, { image: url })}
+          />
+          <div className="space-y-2">
+            <Label>Title</Label>
+            <Input value={card.name} onChange={(e) => updateCard(i, { name: e.target.value })} />
+          </div>
+          <div className="space-y-2">
+            <Label>Subtitle</Label>
+            <Textarea
+              value={card.sub}
+              onChange={(e) => updateCard(i, { sub: e.target.value })}
+              rows={2}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -339,6 +403,7 @@ function StepsEditor({
 export function SectionEditor({ sections }: SectionEditorProps) {
   const order = [
     "hero",
+    "collection_cards",
     "capability_design",
     "capability_manufacture",
     "capability_deliver",
@@ -351,7 +416,22 @@ export function SectionEditor({ sections }: SectionEditorProps) {
     "page_contact",
   ];
 
-  const sorted = [...sections].sort((a, b) => {
+  const withCollection = sections.some((s) => s.section === "collection_cards")
+    ? sections
+    : [
+        ...sections,
+        {
+          id: 0,
+          section: "collection_cards",
+          title: null,
+          subtitle: null,
+          body: null,
+          image: null,
+          metadata: JSON.stringify({ cards: DEFAULT_COLLECTION_CARDS }),
+        } as PageContent,
+      ];
+
+  const sorted = [...withCollection].sort((a, b) => {
     const ai = order.indexOf(a.section);
     const bi = order.indexOf(b.section);
     if (ai === -1 && bi === -1) return a.section.localeCompare(b.section);
@@ -363,7 +443,7 @@ export function SectionEditor({ sections }: SectionEditorProps) {
   return (
     <div className="space-y-3">
       <p className="text-sm text-t3">
-        Manage homepage, OEM, and Contact page images. Product page galleries are edited under Products.
+        Manage homepage, OEM, and Contact page images. The Collection cards (homepage four categories) are edited below.
       </p>
       {sorted.map((section, i) => (
         <SectionCard key={section.section} section={section} defaultOpen={i === 0} />

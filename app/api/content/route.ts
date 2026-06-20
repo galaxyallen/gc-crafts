@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+export { dynamic } from "@/lib/api-dynamic";
 import { prisma } from "@/lib/prisma";
 import { handleRouteError } from "@/lib/api-errors";
 

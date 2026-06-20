@@ -4,6 +4,13 @@ import type { ProductCategory } from "@/lib/types";
 import { CATEGORY_ROUTES, PRODUCT_CATEGORIES } from "@/lib/types";
 import { parseJson } from "@/lib/utils";
 
+export type CollectionCardData = {
+  category: ProductCategory;
+  name: string;
+  sub: string;
+  image: string;
+};
+
 export async function getSettingsMap() {
   const rows = await prisma.setting.findMany();
   return Object.fromEntries(rows.map((r) => [r.key, r.value]));
@@ -55,6 +62,32 @@ export function buildProductCards(products: Product[]) {
   );
 }
 
+/** Homepage "The Collection" cards — CMS metadata overrides product cover images. */
+export function buildCollectionCards(
+  collectionSection: PageContent | undefined,
+  products: Product[]
+) {
+  const meta = parseJson<{ cards?: CollectionCardData[] }>(collectionSection?.metadata, {});
+  const cmsCards = meta.cards?.filter((c) => c.image);
+
+  if (cmsCards && cmsCards.length > 0) {
+    return PRODUCT_CATEGORIES.map((category, index) => {
+      const cms = cmsCards.find((c) => c.category === category);
+      const defaults = CATEGORY_CARD_DEFAULTS[category];
+      return {
+        slug: categorySlug(category),
+        num: String(index + 1).padStart(2, "0"),
+        name: cms?.name || defaults.name,
+        sub: cms?.sub || defaults.sub,
+        image: cms?.image || defaults.image,
+        href: CATEGORY_ROUTES[category],
+      };
+    });
+  }
+
+  return buildProductCards(products);
+}
+
 function truncate(text: string, max: number) {
   if (text.length <= max) return text;
   return `${text.slice(0, max - 1).trim()}…`;
@@ -85,3 +118,10 @@ const CATEGORY_CARD_DEFAULTS: Record<
     image: "/img/watches.jpg",
   },
 };
+
+export const DEFAULT_COLLECTION_CARDS: CollectionCardData[] = PRODUCT_CATEGORIES.map((category) => ({
+  category,
+  name: CATEGORY_CARD_DEFAULTS[category].name,
+  sub: CATEGORY_CARD_DEFAULTS[category].sub,
+  image: CATEGORY_CARD_DEFAULTS[category].image,
+}));

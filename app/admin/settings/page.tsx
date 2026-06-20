@@ -160,6 +160,15 @@ export default function SettingsPage() {
                 />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="facebook">Facebook</Label>
+                <Input
+                  id="facebook"
+                  value={settings.facebook ?? ""}
+                  onChange={(e) => update("facebook", e.target.value)}
+                  placeholder="https://facebook.com/your-page"
+                />
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="address_1">Address line 1</Label>
                 <Input
                   id="address_1"
@@ -180,7 +189,7 @@ export default function SettingsPage() {
               size="sm"
               onClick={() =>
                 saveSettings(
-                  ["email", "whatsapp", "instagram", "linkedin", "address_1", "address_2"],
+                  ["email", "whatsapp", "instagram", "linkedin", "facebook", "address_1", "address_2"],
                   setSavingContact
                 )
               }

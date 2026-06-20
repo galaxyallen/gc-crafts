@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { isDataUrl } from "@/lib/image-utils";
+import { isUnoptimizedImage } from "@/lib/image-utils";
 
 interface BreadcrumbItem {
   label: string;
@@ -28,7 +28,7 @@ export function PageHero({ title, tagline, description, breadcrumbs, backgroundI
               priority
               className="object-cover opacity-35"
               sizes="100vw"
-              unoptimized={isDataUrl(backgroundImage)}
+              unoptimized={isUnoptimizedImage(backgroundImage)}
             />
             <div className="pg-hero-overlay" aria-hidden="true" />
           </>

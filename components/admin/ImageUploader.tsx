@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import { Upload, X, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { isDataUrl } from "@/lib/image-utils";
+import { isUnoptimizedImage } from "@/lib/image-utils";
 import { Button } from "@/components/ui/button";
 
 interface ImageUploaderProps {
@@ -66,7 +66,7 @@ export function ImageUploader({ value, onChange, className }: ImageUploaderProps
               alt={`Upload ${index + 1}`}
               fill
               className="object-cover"
-              unoptimized={isDataUrl(url)}
+              unoptimized={isUnoptimizedImage(url)}
             />
             <button
               type="button"

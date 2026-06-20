@@ -1,5 +1,6 @@
 import { get } from "@vercel/blob";
 import { NextRequest } from "next/server";
+export { dynamic } from "@/lib/api-dynamic";
 import { getBlobAccess, getBlobCredentials } from "@/lib/blob-env";
 
 export async function GET(request: NextRequest) {

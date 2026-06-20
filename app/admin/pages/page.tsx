@@ -10,8 +10,9 @@ export default async function PagesEditorPage() {
       <Topbar title="Page Content" />
       <div className="flex-1 p-6">
         <p className="mb-6 text-sm text-t2">
-          Upload and edit images for the homepage, OEM page, and Contact page. Product galleries are managed under
-          Products; material texture photos under Materials.
+          Upload and edit images for the homepage, OEM page, and Contact page. Use{" "}
+          <strong className="text-t1">Home — The Collection</strong> for the four category cards on the homepage.
+          Product detail galleries are managed under Products; material photos under Materials.
         </p>
         <SectionEditor sections={sections} />
       </div>

@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+export { dynamic } from "@/lib/api-dynamic";
 import type { ProductCategory } from "@/lib/types";
 import { prisma } from "@/lib/prisma";
 import { requireAuth, hasAuthSession } from "@/lib/api-auth";
 import { assertHttpImageUrl, handleRouteError } from "@/lib/api-errors";
 import { sanitizeString } from "@/lib/utils";
+import { revalidatePublicSite } from "@/lib/revalidate-site";
 
 function validateProductImages(images: unknown) {
   if (!Array.isArray(images)) return;
@@ -60,6 +62,8 @@ export async function POST(request: NextRequest) {
         seoDesc: body.seoDesc ? sanitizeString(body.seoDesc, 500) : null,
       },
     });
+
+    revalidatePublicSite();
 
     return NextResponse.json(product, { status: 201 });
   } catch (err) {

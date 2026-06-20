@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gccrafts.com";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.galaxybz.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = ["", "/displays", "/trays", "/busts", "/watches", "/oem", "/contact"];

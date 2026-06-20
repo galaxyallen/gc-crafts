@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { isUnoptimizedImage } from "@/lib/image-utils";
 
 interface CapabilityItem {
   title?: string | null;
@@ -42,7 +43,7 @@ export function CapabilitySection({ design, manufacture, deliver }: CapabilitySe
           {items.map((item, i) => (
             <article key={item.num} className={`cc rv d${Math.min(i + 1, 3)}`}>
               <div className="cc-img">
-                <Image src={item.image} alt={item.label} width={480} height={384} loading="lazy" />
+                <Image src={item.image} alt={item.label} width={480} height={384} loading="lazy" unoptimized={isUnoptimizedImage(item.image)} />
               </div>
               <div className="cc-n">
                 <span>{item.num}</span>

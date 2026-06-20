@@ -1,5 +1,7 @@
 # 部署到 Vercel（全栈）
 
+> 完整流程（本地开发 → 后台 → 排错）见 **[开发与部署指南.md](./开发与部署指南.md)**。
+
 GC CRAFTS 使用 Next.js + Prisma + PostgreSQL + **Vercel Blob**。全部可在 Vercel 控制台完成，无需 Cloudinary 或单独 Neon 账号。
 
 ## 一、在 Vercel 创建项目
@@ -91,8 +93,9 @@ npm run db:seed
 - 确认 Blob 已 **Connect to Project**，且存在 `BLOB_READ_WRITE_TOKEN`
 - 单张图片建议小于 4.5 MB（Vercel 函数请求体限制）
 
-**构建失败 migrate deploy**
-- `DATABASE_URL` 必须是 PostgreSQL 直连字符串
+**构建失败 migrate deploy（P1002 advisory lock）**
+- Neon 迁移必须使用非池化连接：`DATABASE_URL_UNPOOLED` 或 `POSTGRES_URL_NON_POOLING`
+- 项目已通过 `scripts/prisma-migrate.mjs` 自动处理，确保 Vercel 环境中有上述变量
 
 **登录失败**
 - `NEXTAUTH_URL` 必须与浏览器地址栏完全一致

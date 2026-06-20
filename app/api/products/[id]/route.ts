@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export { dynamic } from "@/lib/api-dynamic";
+
 import { prisma } from "@/lib/prisma";
 
 import { requireAuth } from "@/lib/api-auth";
@@ -7,6 +9,7 @@ import { requireAuth } from "@/lib/api-auth";
 import { assertHttpImageUrl, handleRouteError } from "@/lib/api-errors";
 
 import { sanitizeString } from "@/lib/utils";
+import { revalidatePublicSite } from "@/lib/revalidate-site";
 
 
 
@@ -120,7 +123,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     });
 
-
+    revalidatePublicSite();
 
     return NextResponse.json(product);
 
@@ -154,6 +157,8 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
 
     await prisma.product.delete({ where: { id } });
+
+    revalidatePublicSite();
 
     return NextResponse.json({ success: true });
 

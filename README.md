@@ -62,10 +62,12 @@ lib/            # Utilities (prisma, auth, email, cloudinary)
 
 ## Deploy to Vercel
 
-1. Push to GitHub
+See **[开发与部署指南.md](./开发与部署指南.md)** (full dev-to-deploy guide, Chinese) or **[DEPLOY.md](./DEPLOY.md)** (Vercel quick reference).
+
+1. Push to GitHub (or `npx vercel deploy --prod`)
 2. Import project in Vercel
-3. Add all environment variables from `.env.example`
-4. Build command: `prisma generate && prisma migrate deploy && next build`
+3. Connect Postgres + Blob storage; add env vars from `.env.example`
+4. Build command: `npm run vercel-build` (configured in `vercel.json`)
 
 ## Notes
 

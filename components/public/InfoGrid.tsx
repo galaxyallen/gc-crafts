@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { isUnoptimizedImage } from "@/lib/image-utils";
 
 interface InfoGridProps {
   title?: React.ReactNode;
@@ -58,7 +59,7 @@ export function InfoGrid({
             </Link>
           </div>
           <div className="info-img rv d2">
-            <Image src={image} alt={imageAlt} width={640} height={480} loading="lazy" />
+            <Image src={image} alt={imageAlt} width={640} height={480} loading="lazy" unoptimized={isUnoptimizedImage(image)} />
           </div>
         </div>
       </div>

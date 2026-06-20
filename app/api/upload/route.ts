@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export { dynamic } from "@/lib/api-dynamic";
+
 import { requireAuth } from "@/lib/api-auth";
 
 import { uploadToBlob } from "@/lib/blob-upload";
@@ -7,6 +9,7 @@ import { uploadToBlob } from "@/lib/blob-upload";
 import { isBlobConfigured } from "@/lib/blob-env";
 
 import { saveLocalUpload } from "@/lib/local-upload";
+import { revalidatePublicSite } from "@/lib/revalidate-site";
 
 
 
@@ -63,7 +66,7 @@ export async function POST(request: NextRequest) {
     try {
 
       const result = await uploadToBlob(file);
-
+      revalidatePublicSite();
       return NextResponse.json(result);
 
     } catch (err) {

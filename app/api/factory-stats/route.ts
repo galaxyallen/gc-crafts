@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export { dynamic } from "@/lib/api-dynamic";
+
 import { prisma } from "@/lib/prisma";
 
 import { requireAuth } from "@/lib/api-auth";
@@ -7,6 +9,7 @@ import { requireAuth } from "@/lib/api-auth";
 import { handleRouteError } from "@/lib/api-errors";
 
 import { sanitizeString } from "@/lib/utils";
+import { revalidatePublicSite } from "@/lib/revalidate-site";
 
 
 
@@ -60,7 +63,7 @@ export async function PUT(request: NextRequest) {
 
     );
 
-
+    revalidatePublicSite(["/", "/oem"]);
 
     return NextResponse.json({ success: true });
 

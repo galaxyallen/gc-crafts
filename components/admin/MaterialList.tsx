@@ -20,7 +20,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Image from "next/image";
-import { isDataUrl } from "@/lib/image-utils";
+import { isUnoptimizedImage } from "@/lib/image-utils";
 import { GripVertical, Pencil, Plus, Trash2, X, Loader2 } from "lucide-react";
 import { Material } from "@prisma/client";
 import { Button } from "@/components/ui/button";
@@ -82,7 +82,7 @@ function SortableMaterialRow({
             alt={material.name}
             fill
             className="object-cover"
-            unoptimized={isDataUrl(material.image)}
+            unoptimized={isUnoptimizedImage(material.image)}
           />
         ) : null}
       </div>

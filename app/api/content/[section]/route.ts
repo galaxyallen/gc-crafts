@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export { dynamic } from "@/lib/api-dynamic";
+
 import { prisma } from "@/lib/prisma";
 
 import { requireAuth } from "@/lib/api-auth";
@@ -7,6 +9,7 @@ import { requireAuth } from "@/lib/api-auth";
 import { assertHttpImageUrl, handleRouteError } from "@/lib/api-errors";
 
 import { sanitizeString } from "@/lib/utils";
+import { revalidatePublicSite } from "@/lib/revalidate-site";
 
 
 
@@ -20,16 +23,23 @@ function validateMetadataImages(metadata: unknown) {
 
 
 
-  const images = (metadata as { images?: { url?: string }[] }).images;
+  const record = metadata as {
+    images?: { url?: string }[];
+    cards?: { image?: string }[];
+  };
 
-  if (!Array.isArray(images)) return;
+  const images = record.images;
+  if (Array.isArray(images)) {
+    for (const img of images) {
+      if (img?.url) assertHttpImageUrl(img.url, "Gallery image");
+    }
+  }
 
-
-
-  for (const img of images) {
-
-    if (img?.url) assertHttpImageUrl(img.url, "Gallery image");
-
+  const cards = record.cards;
+  if (Array.isArray(cards)) {
+    for (const card of cards) {
+      if (card?.image) assertHttpImageUrl(card.image, "Collection card image");
+    }
   }
 
 }
@@ -128,7 +138,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     });
 
-
+    revalidatePublicSite();
 
     return NextResponse.json(content);
 

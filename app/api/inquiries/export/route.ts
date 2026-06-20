@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+
+export { dynamic } from "@/lib/api-dynamic";
+
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/api-auth";
 import { parseJson } from "@/lib/utils";

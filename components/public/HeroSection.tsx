@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
+import { isUnoptimizedImage } from "@/lib/image-utils";
 
 interface HeroSectionProps {
   title?: string | null;
@@ -31,7 +32,7 @@ export function HeroSection({ title, subtitle, body, image }: HeroSectionProps) 
   return (
     <section className="hero">
       <div className="hero-img" aria-hidden="true">
-        <Image src={heroImage} alt="" fill priority className="hero-img-inner" sizes="100vw" />
+        <Image src={heroImage} alt="" fill priority className="hero-img-inner" sizes="100vw" unoptimized={isUnoptimizedImage(heroImage)} />
       </div>
 
       <div className="hero-mesh" aria-hidden="true">

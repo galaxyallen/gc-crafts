@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export { dynamic } from "@/lib/api-dynamic";
+
 import type { InquiryStatus } from "@/lib/types";
 
 import { prisma } from "@/lib/prisma";

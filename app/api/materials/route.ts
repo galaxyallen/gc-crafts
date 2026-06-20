@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export { dynamic } from "@/lib/api-dynamic";
+
 import { prisma } from "@/lib/prisma";
 
 import { requireAuth } from "@/lib/api-auth";
@@ -7,6 +9,7 @@ import { requireAuth } from "@/lib/api-auth";
 import { assertHttpImageUrl, handleRouteError } from "@/lib/api-errors";
 
 import { sanitizeString } from "@/lib/utils";
+import { revalidatePublicSite } from "@/lib/revalidate-site";
 
 
 
@@ -76,7 +79,7 @@ export async function POST(request: NextRequest) {
 
     });
 
-
+    revalidatePublicSite(["/"]);
 
     return NextResponse.json(material, { status: 201 });
 

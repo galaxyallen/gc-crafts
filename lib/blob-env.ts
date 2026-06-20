@@ -11,7 +11,10 @@ export function isBlobConfigured() {
 
 export function getBlobAccess(): BlobAccess {
   const access = process.env.BLOB_ACCESS?.toLowerCase();
-  return access === "private" ? "private" : "public";
+  if (access === "private" || access === "public") return access;
+  // Stores connected via BLOB_STORE_ID (Vercel OIDC) are typically private.
+  if (process.env.BLOB_STORE_ID) return "private";
+  return "public";
 }
 
 export function getBlobCredentials() {
